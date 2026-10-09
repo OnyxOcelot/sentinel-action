@@ -1,0 +1,41 @@
+# The Action's manifest. On release it is copied to the root of the public Action repository
+# (see docs/releasing-the-action.md), next to dist/, which is built and never edited by hand.
+name: Sentinel
+description: Replay your agent's conversations on every pull request and see what changed.
+author: Sentinel
+branding:
+  icon: shield
+  color: purple
+runs:
+  using: node24
+  main: dist/index.cjs
+inputs:
+  sentinel-token:
+    description: The Sentinel API token for this project. Pass it from a repository secret.
+    required: true
+  agent-endpoint:
+    description: The URL of your agent's chat endpoint. Pass it from a repository secret; it is never logged.
+    required: true
+  agent-headers:
+    description: JSON of extra headers to send to your agent (for example Authorization). Pass it from a repository secret.
+    required: false
+  runs-per-scenario:
+    description: How many times to run each scenario, from 5 to 10.
+    default: "10"
+  timeout-seconds:
+    description: How long to wait for each call to your agent.
+    default: "30"
+  concurrency:
+    description: How many calls to your agent to make at once.
+    default: "15"
+  sentinel-url:
+    description: The address of your Sentinel dashboard.
+    default: https://app.sentinel.example
+  mode:
+    description: "run replays your scenarios; check only verifies the setup and reports back."
+    default: run
+outputs:
+  pass-rate:
+    description: The share of scenario runs that passed, as a number from 0 to 1.
+  run-url:
+    description: The link to this run in the Sentinel dashboard.
